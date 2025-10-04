@@ -30,10 +30,17 @@ def create_homework(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)  # Parse JSON body
+            username = data.get('username')  # Get the username
+            password = data.get('password')  # Get the password
             subject_id = data.get('subject_id')  # Get the subject ID
             title = data.get('title')
             description = data.get('description')
             due_date = data.get('due_date')
+
+            # Authenticate the user
+            user = authenticate(username=username, password=password)
+            if user is None:
+                return HttpResponse("Invalid username or password", status=403)
 
             subject = Subject.objects.get(id=subject_id)
 
@@ -52,8 +59,7 @@ def create_homework(request):
         except Exception as e:
             return HttpResponse(str(e), status=400)
 
-    return HttpResponse("Invalid request method", status=405)
-
+    return HttpResponse("Invalid request method", status=40
 # View to get all groups and the users in them
 def get_groups_with_users(request):
     groups = Group.objects.all()
