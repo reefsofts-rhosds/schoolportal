@@ -59,7 +59,7 @@ def create_homework(request):
         except Exception as e:
             return HttpResponse(str(e), status=400)
 
-    return HttpResponse("Invalid request method", status=40
+    return HttpResponse("Invalid request method", status=40)
 # View to get all groups and the users in them
 def get_groups_with_users(request):
     groups = Group.objects.all()
