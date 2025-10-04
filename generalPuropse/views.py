@@ -1,8 +1,9 @@
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse
+from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
+from django.contrib.auth.models import Group, User
 from .models import Homework, Subject
-
 
 def homework_detail(request, homework_id, detail_type):
     try:
@@ -16,9 +17,8 @@ def homework_detail(request, homework_id, detail_type):
             return HttpResponse(str(homework.dueDate))
         elif detail_type == "subject":
             return HttpResponse(str(homework.subject))
-        elif detail_type == "attachedFile" :
+        elif detail_type == "attachedFile":
             return HttpResponse(str(homework.attachedFile))
-
         else:
             return HttpResponse('Invalid detail type', status=400)
     
@@ -34,7 +34,6 @@ def create_homework(request):
             title = data.get('title')
             description = data.get('description')
             due_date = data.get('due_date')
-            attached_file = data.get('attached_file')  # Handle file upload separately
 
             subject = Subject.objects.get(id=subject_id)
 
@@ -55,3 +54,19 @@ def create_homework(request):
 
     return HttpResponse("Invalid request method", status=405)
 
+# View to get all groups and the users in them
+def get_groups_with_users(request):
+    groups = Group.objects.all()
+    group_data = {}
+
+    for group in groups:
+        users = group.user_set.all()  # Get users in the group
+        usernames = [user.username for user in users]
+        group_data[group.name] = usernames
+
+    return JsonResponse(group_data)
+
+# View to get all homework IDs
+def get_homework_ids(request):
+    homework_ids = Homework.objects.values_list('id', flat=True)  # Get all homework IDs
+    return JsonResponse(list(homework_ids), safe=False)
