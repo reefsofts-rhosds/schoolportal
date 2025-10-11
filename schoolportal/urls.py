@@ -20,5 +20,6 @@ from django.urls import path, include  # Import include to include app URLs
 urlpatterns = [
     path('admin/', admin.site.urls),  # Admin panel
     path('api/', include('generalPuropse.urls')),  # Include app URLs under /api/
+    path('webUI/', include('frontend.urls')),
 ]
 
