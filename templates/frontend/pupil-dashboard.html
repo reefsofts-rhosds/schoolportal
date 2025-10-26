@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pupil Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1 {
+            color: #4CAF50;
+        }
+        .homework {
+            margin-top: 20px;
+        }
+        .subject {
+            margin-bottom: 15px;
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Welcome, {{ user.username }}</h1>
+
+    <h2>Your Subjects</h2>
+    <div class="subjects">
+        {% for subject in subjects %}
+            <div class="subject">
+                <h3>{{ subject.name }}</h3>
+                <h4>Assigned Homework</h4>
+                <ul>
+                    {% for hw in homework %}
+                        {% if hw.subject == subject %}
+                            <li>{{ hw.title }} - Due: {{ hw.dueDate }}</li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+        {% empty %}
+            <p>No subjects found.</p>
+        {% endfor %}
+    </div>
+
+</body>
+</html>

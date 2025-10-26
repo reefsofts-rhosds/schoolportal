@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher API Interaction</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1 {
+            color: #4CAF50;
+        }
+        input, button {
+            margin: 5px 0;
+            padding: 10px;
+        }
+        .results {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Teacher API Interaction</h1>
+
+    <section>
+        <h2>Get Homework Details</h2>
+        <input type="number" id="homeworkId" placeholder="Homework ID" required>
+        <select id="detailType">
+            <option value="title">Title</option>
+            <option value="description">Description</option>
+            <option value="dueDate">Due Date</option>
+            <option value="subject">Subject</option>
+            <option value="attachedFile">Attached File</option>
+        </select>
+        <button onclick="getHomeworkDetail()">Get Detail</button>
+    </section>
+
+    <section>
+        <h2>Create Homework</h2>
+        <input type="text" id="username" placeholder="Username" required>
+        <input type="password" id="password" placeholder="Password" required>
+        <input type="number" id="subjectId" placeholder="Subject ID" required>
+        <input type="text" id="title" placeholder="Title" required>
+        <textarea id="description" placeholder="Description" required></textarea>
+        <input type="date" id="dueDate" required>
+        <button onclick="createHomework()">Create Homework</button>
+    </section>
+
+    <section>
+        <h2>Get Groups with Users</h2>
+        <button onclick="getGroupsWithUsers()">Show Groups</button>
+        <div id="groupsList" class="results"></div>
+    </section>
+
+    <div id="result" class="results"></div>
+
+    <script>
+        async function getHomeworkDetail() {
+            const homeworkId = document.getElementById('homeworkId').value;
+            const detailType = document.getElementById('detailType').value;
+            const response = await fetch(`/api/homework/${homeworkId}/${detailType}/`);
+            const resultDiv = document.getElementById('result');
+
+            if (response.ok) {
+                const detail = await response.text();
+                resultDiv.innerHTML = `<strong>${detailType.charAt(0).toUpperCase() + detailType.slice(1)}:</strong> ${detail}`;
+            } else {
+                resultDiv.innerHTML = 'Error: ' + await response.text();
+            }
+        }
+
+        async function createHomework() {
+            const homeworkData = {
+                username: document.getElementById('username').value,
+                password: document.getElementById('password').value,
+                subject_id: document.getElementById('subjectId').value,
+                title: document.getElementById('title').value,
+                description: document.getElementById('description').value,
+                due_date: document.getElementById('dueDate').value
+            };
+
+            const response = await fetch('/api/create_homework/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(homeworkData),
+            });
+
+            const resultDiv = document.getElementById('result');
+            if (response.ok) {
+                resultDiv.innerHTML = 'Homework created successfully!';
+            } else {
+                resultDiv.innerHTML = 'Error: ' + await response.text();
+            }
+        }
+
+        async function getGroupsWithUsers() {
+            const response = await fetch('/api/groups/');
+            const resultDiv = document.getElementById('groupsList');
+
+            if (response.ok) {
+                const groupData = await response.json();
+                resultDiv.innerHTML = '<h3>Groups and Users:</h3>' + JSON.stringify(groupData, null, 2).replace(/,/g, ',<br>');
+            } else {
+                resultDiv.innerHTML = 'Error: ' + await response.text();
+            }
+        }
+    </script>
+
+</body>
+</html>
