@@ -101,7 +101,7 @@ def subject_detail(request, subject_id, detail_type):
         elif detail_type == 'group':
             return HttpResponse(str(subject.targetGroup))
         else:
-            return HttpResponse('Invalid detail type', status=400)
-    
+            return HttpResponse('Invalid detail type', status=400) #Raise error if detail is invalid
+    # Raise error if subject doesn't exist
     except Subject.DoesNotExist:
         return HttpResponse('Subject not found', status=404)
