@@ -1,10 +1,8 @@
 from django.urls import path
-from .views import (
-    teacher_view,
-    pupil_view,
-)
+from .views import *
 
 urlpatterns = [
-    path('teacher/',teacher_view, name='Teacher Dashboard'),
-    path('pupil/',pupil_view, name='Pupil Dashboard'),  # View to get specific homework details
+    path('teacher/dashboard',teacher_view, name='Teacher Dashboard'),
+    path('pupil/dashboard',pupil_view, name='Pupil Dashboard'),  
+    path('',account_type_select, name='Choose Account Type' ), 
 ]
