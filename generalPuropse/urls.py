@@ -1,10 +1,5 @@
 from django.urls import path
-from .views import (
-    homework_detail,
-    create_homework,
-    get_groups_with_users,
-    get_homework_ids
-)
+from .views import *
 
 urlpatterns = [
     path('homework/<int:homework_id>/<str:detail_type>/', homework_detail, name='homework_detail'),  # View to get specific homework details
